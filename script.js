@@ -1,6 +1,5 @@
 const layeredTextList = document.getElementsByClassName("layeredText")
-const LAYERS_COUNT = 24;
-const LAYER_OFFSET = 3;
+const LAYERS_COUNT = 50;
 
 for (let i = 0; i < layeredTextList.length; i++) {
   const element = layeredTextList[i];

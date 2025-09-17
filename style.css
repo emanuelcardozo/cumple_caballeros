@@ -4,7 +4,7 @@
 }
 
 :root {
-  --layers-count: 24;
+  --layers-count: 50;
   --layer-offset: 1px;
   
   --gold-500: #FFCC3A;
@@ -21,7 +21,7 @@ body {
 /* 3D Text */
 
 .scene {  
-  perspective: 20vw;
+  perspective: 15vw;
 }
 
 .scene * {
@@ -34,15 +34,26 @@ body {
 
   display: flex;
   flex-direction: column;
+  gap: 5vw;
 }
 
 .title-primary {
   font-size: 12vw;
 }
 
+.title-primary .text::first-letter,
+.title-primary .layer::first-letter {
+  font-size: 20vw;
+}
+
 .title-secondary {
   font-size: 15vw;
   margin-top: -5vw;
+}
+
+.title-secondary .text::first-letter,
+.title-secondary .layer::first-letter {
+  font-size: 20vw;
 }
 
 .layeredText {
