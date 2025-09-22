@@ -1,42 +1,46 @@
-import * as THREE from "three";
-import { useRef, useState } from "react";
-import { Canvas, useFrame, type ThreeElements } from "@react-three/fiber";
-import "./index.css";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, ScrollControls } from "@react-three/drei";
+// import { EffectComposer, TiltShift2 } from "@react-three/postprocessing";
+import SeiyaModel from "./SeiyaModel";
 
-function Box(props: ThreeElements["mesh"]) {
-  const meshRef = useRef<THREE.Mesh>(null!);
-  const [hovered, setHover] = useState(false);
-  const [active, setActive] = useState(false);
-  useFrame((_state, delta) => (meshRef.current.rotation.x += delta));
-  return (
-    <mesh
-      {...props}
-      ref={meshRef}
-      scale={active ? 1.5 : 1}
-      onClick={(_) => setActive(!active)}
-      onPointerOver={(_) => setHover(true)}
-      onPointerOut={(_) => setHover(false)}
-    >
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color={hovered ? "hotpink" : "#2f74c0"} />
-    </mesh>
-  );
-}
+import "./index.css";
 
 export default function App() {
   return (
-    <Canvas>
-      <ambientLight intensity={Math.PI / 2} />
-      <spotLight
-        position={[10, 10, 10]}
-        angle={0.15}
-        penumbra={1}
-        decay={0}
-        intensity={Math.PI}
+    <Canvas
+      shadows
+      gl={{ antialias: false }}
+      camera={{ position: [0, 0, 1], fov: 1 }}
+    >
+      <ambientLight intensity={10} />
+      <directionalLight
+        intensity={5}
+        position={[-5, 5, 5]}
+        castShadow
+        shadow-mapSize={2048}
+        shadow-bias={-0.0001}
       />
-      {/* <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} /> */}
-      <Box position={[-1.2, 0, 0]} />
-      <Box position={[1.2, 0, 0]} />
+      <directionalLight
+        intensity={2}
+        position={[20, 20, 20]}
+        castShadow
+        shadow-mapSize={2048}
+        shadow-bias={-0.0001}
+      />
+      <ScrollControls pages={2}>
+        <OrbitControls />
+        <SeiyaModel position={[0, -0.01, 0]} rotation={[0, 0, 0]} />
+      </ScrollControls>
+      <mesh
+        rotation={[-0.5 * Math.PI, 0, 0]}
+        position={[0, -1.01, 0]}
+        receiveShadow
+      >
+        <shadowMaterial transparent opacity={0.75} />
+      </mesh>
+      {/* <EffectComposer multisampling={4}>
+        <TiltShift2 blur={1} />
+      </EffectComposer> */}
     </Canvas>
   );
 }
