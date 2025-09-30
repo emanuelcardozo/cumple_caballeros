@@ -12,7 +12,7 @@ export default function App() {
       gl={{ antialias: false }}
       camera={{ position: [0, 0, 1], fov: 1 }}
     >
-      <ambientLight intensity={10} />
+      <ambientLight intensity={2} />
       <directionalLight
         intensity={5}
         position={[-5, 5, 5]}

@@ -16,8 +16,25 @@ export default function SeiyaModel(props: ThreeElements["group"]) {
   const { nodes, materials } = useGraph(clone);
   const { actions, names } = useAnimations(animations, group);
 
+  console.log(names);
+
   useEffect(() => {
+    let i = 0;
+    let interval: number;
     actions[names[0]]?.play();
+    interval = setInterval(() => {
+      console.log(names[i]);
+
+      actions[names[i]]?.stop();
+      i++;
+      actions[names[i]]?.play();
+
+      if (i === names.length) {
+        i = 0;
+      }
+    }, 3000);
+
+    return () => clearInterval(interval);
   }, [actions, names]);
 
   return (
