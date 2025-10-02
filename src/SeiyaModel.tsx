@@ -11,7 +11,7 @@ import { SkeletonUtils } from "three-stdlib";
 
 export default function SeiyaModel(props: ThreeElements["group"]) {
   const group = React.useRef<THREE.Group>(null);
-  const { scene, animations } = useGLTF("/Seiya.glb");
+  const { scene, animations } = useGLTF("/model/Seiya.glb");
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes, materials } = useGraph(clone);
   const { actions, names } = useAnimations(animations, group);
@@ -78,4 +78,4 @@ export default function SeiyaModel(props: ThreeElements["group"]) {
   );
 }
 
-useGLTF.preload("/Seiya.glb");
+useGLTF.preload("/model/Seiya.glb");
