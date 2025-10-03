@@ -9,7 +9,11 @@ import { useGraph, type ThreeElements } from "@react-three/fiber";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { SkeletonUtils } from "three-stdlib";
 
-export default function SeiyaModel(props: ThreeElements["group"]) {
+type SeiyaModelProps = ThreeElements["group"] & {
+  showModel: boolean;
+};
+
+export default function SeiyaModel(props: SeiyaModelProps) {
   const group = React.useRef<THREE.Group>(null);
   const { scene, animations } = useGLTF("/model/Seiya.glb");
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
@@ -18,24 +22,47 @@ export default function SeiyaModel(props: ThreeElements["group"]) {
 
   console.log(names);
 
+  // useEffect(() => {
+  //   let i = 0;
+  //   let interval: number;
+  //   actions[names[0]]?.play();
+  //   interval = setInterval(() => {
+  //     console.log(names[i]);
+
+  //     actions[names[i]]?.stop();
+  //     i++;
+  //     actions[names[i]]?.play();
+
+  //     if (i === names.length) {
+  //       i = 0;
+  //     }
+  //   }, 3000);
+
+  //   return () => clearInterval(interval);
+  // }, [actions, names]);
+
   useEffect(() => {
-    let i = 0;
-    let interval: number;
-    actions[names[0]]?.play();
-    interval = setInterval(() => {
-      console.log(names[i]);
+    actions["fight_idle"]?.play();
+    if (!props.showModel) return;
 
-      actions[names[i]]?.stop();
-      i++;
-      actions[names[i]]?.play();
+    setTimeout(() => {
+      actions["fight_idle"]?.stop();
+      actions["elegant"]?.play();
 
-      if (i === names.length) {
-        i = 0;
-      }
-    }, 3000);
+      setTimeout(() => {
+        const audio = new Audio("/audios/1_intro.wav");
+        audio.play();
 
-    return () => clearInterval(interval);
-  }, [actions, names]);
+        actions["elegant"]?.stop();
+        actions["talk"]?.play();
+
+        setTimeout(() => {
+          actions["talk"]?.stop();
+          actions["idle"]?.play();
+        }, 8_000);
+      }, 2_000);
+    }, 5_000);
+  }, [actions, names, props.showModel]);
 
   return (
     <group ref={group} {...props} dispose={null}>

@@ -1,13 +1,22 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, ScrollControls } from "@react-three/drei";
-import { EffectComposer, TiltShift2 } from "@react-three/postprocessing";
+// import { EffectComposer, TiltShift2 } from "@react-three/postprocessing";
 import SeiyaModel from "./SeiyaModel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./index.css";
 
 export default function App() {
   const [showModel, setShowModel] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (showModel) {
+      const audio = new Audio("/song/pegasus_fantasy.mp3");
+      audio.currentTime = 8;
+      audio.volume = 0.25;
+      audio.play();
+    }
+  }, [showModel]);
 
   return (
     <>
@@ -35,8 +44,6 @@ export default function App() {
             style={{ width: "100px", height: "100px" }}
             onClick={() => {
               setShowModel(true);
-              const audio = new Audio("/song/pegasus_fantasy.mp3");
-              audio.play();
             }}
           >
             Show Model
@@ -65,7 +72,11 @@ export default function App() {
         />
         <ScrollControls pages={2}>
           <OrbitControls />
-          <SeiyaModel position={[0, -0.01, 0]} rotation={[0, 0, 0]} />
+          <SeiyaModel
+            showModel={showModel}
+            position={[0, -0.01, 0]}
+            rotation={[0, 0, 0]}
+          />
         </ScrollControls>
         <mesh
           rotation={[-0.5 * Math.PI, 0, 0]}
@@ -74,9 +85,9 @@ export default function App() {
         >
           <shadowMaterial transparent opacity={0.75} />
         </mesh>
-        <EffectComposer multisampling={4}>
+        {/* <EffectComposer multisampling={4}>
           <TiltShift2 blur={1} />
-        </EffectComposer>
+        </EffectComposer> */}
       </Canvas>
     </>
   );
