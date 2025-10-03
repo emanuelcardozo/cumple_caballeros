@@ -6,12 +6,29 @@ import { useEffect, useState } from "react";
 
 import "./index.css";
 
+const audio = new Audio("/song/pegasus_fantasy.mp3");
+
 export default function App() {
   const [showModel, setShowModel] = useState<boolean>(false);
 
   useEffect(() => {
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        audio.play();
+      } else {
+        audio.pause();
+      }
+    });
+
+    return () => {
+      document.removeEventListener("visibilitychange", () => {
+        audio.pause();
+      });
+    };
+  }, []);
+
+  useEffect(() => {
     if (showModel) {
-      const audio = new Audio("/song/pegasus_fantasy.mp3");
       audio.currentTime = 8;
       audio.volume = 0.25;
       audio.play();

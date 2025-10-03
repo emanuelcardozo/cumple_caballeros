@@ -13,6 +13,8 @@ type SeiyaModelProps = ThreeElements["group"] & {
   showModel: boolean;
 };
 
+const audio = new Audio("/audios/1_intro.wav");
+
 export default function SeiyaModel(props: SeiyaModelProps) {
   const group = React.useRef<THREE.Group>(null);
   const { scene, animations } = useGLTF("/model/Seiya.glb");
@@ -42,23 +44,38 @@ export default function SeiyaModel(props: SeiyaModelProps) {
   // }, [actions, names]);
 
   useEffect(() => {
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        audio.play();
+      } else {
+        audio.pause();
+      }
+    });
+
+    return () => {
+      document.removeEventListener("visibilitychange", () => {
+        audio.pause();
+      });
+    };
+  }, []);
+
+  useEffect(() => {
     actions["fight_idle"]?.play();
     if (!props.showModel) return;
 
     setTimeout(() => {
-      actions["fight_idle"]?.stop();
       actions["elegant"]?.play();
+      actions["fight_idle"]?.stop();
 
       setTimeout(() => {
-        const audio = new Audio("/audios/1_intro.wav");
         audio.play();
 
-        actions["elegant"]?.stop();
         actions["talk"]?.play();
+        actions["elegant"]?.stop();
 
         setTimeout(() => {
-          actions["talk"]?.stop();
           actions["idle"]?.play();
+          actions["talk"]?.stop();
         }, 8_000);
       }, 2_000);
     }, 5_000);
